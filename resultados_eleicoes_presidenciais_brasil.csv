@@ -1,0 +1,65 @@
+ano,turno,cargo,nome_candidato,sigla_partido,percentual_votos_validos,eleito,fonte
+2002,1,presidente,Lula,PT,46.44,0,TSE
+2002,1,presidente,Serra,PSDB,23.20,0,TSE
+2002,1,presidente,Garotinho,PSB,17.87,0,TSE
+2002,1,presidente,Ciro,PPS,11.97,0,TSE
+2002,1,presidente,Zé Maria,PSTU,0.47,0,TSE
+2002,1,presidente,Rui Costa Pimenta,PCO,0.05,0,TSE
+2002,2,presidente,Lula,PT,61.27,1,TSE
+2002,2,presidente,Serra,PSDB,38.73,0,TSE
+2006,1,presidente,Lula,PT,48.61,0,TSE
+2006,1,presidente,Alckmin,PSDB,41.64,0,TSE
+2006,1,presidente,Heloísa Helena,PSOL,6.85,0,TSE
+2006,1,presidente,Cristovam Buarque,PDT,2.64,0,TSE
+2006,1,presidente,Ana Maria Rangel,PRP,0.13,0,TSE
+2006,1,presidente,Eymael,PSDC,0.07,0,TSE
+2006,1,presidente,Luciano Bivar,PSL,0.06,0,TSE
+2006,2,presidente,Lula,PT,60.83,1,TSE
+2006,2,presidente,Alckmin,PSDB,39.17,0,TSE
+2010,1,presidente,Dilma Rousseff,PT,46.91,0,TSE
+2010,1,presidente,Serra,PSDB,32.61,0,TSE
+2010,1,presidente,Marina,PV,19.33,0,TSE
+2010,1,presidente,Plínio de Arruda Sampaio,PSOL,0.87,0,TSE
+2010,1,presidente,Eymael,PSDC,0.09,0,TSE
+2010,1,presidente,Zé Maria,PSTU,0.08,0,TSE
+2010,1,presidente,Levy Fidelix,PRTB,0.06,0,TSE
+2010,1,presidente,Ivan Pinheiro,PCB,0.04,0,TSE
+2010,1,presidente,Rui Costa Pimenta,PCO,0.01,0,TSE
+2010,2,presidente,Dilma Rousseff,PT,56.05,1,TSE
+2010,2,presidente,Serra,PSDB,43.95,0,TSE
+2014,1,presidente,Dilma Rousseff,PT,41.59,0,TSE
+2014,1,presidente,Aécio Neves,PSDB,33.55,0,TSE
+2014,1,presidente,Marina,PSB,21.32,0,TSE
+2014,1,presidente,Luciana Genro,PSOL,1.55,0,TSE
+2014,1,presidente,Pastor Everaldo,PSC,0.75,0,TSE
+2014,1,presidente,Eduardo Jorge,PV,0.61,0,TSE
+2014,1,presidente,Levy Fidelix,PRTB,0.43,0,TSE
+2014,1,presidente,Zé Maria,PSTU,0.09,0,TSE
+2014,1,presidente,Eymael,PSDC,0.05,0,TSE
+2014,1,presidente,Rui Costa Pimenta,PCO,0.04,0,TSE
+2014,2,presidente,Dilma Rousseff,PT,51.64,1,TSE
+2014,2,presidente,Aécio Neves,PSDB,48.36,0,TSE
+2018,1,presidente,Bolsonaro,PSL,46.03,0,TSE
+2018,1,presidente,Fernando Haddad,PT,29.28,0,TSE
+2018,1,presidente,Ciro,PDT,12.47,0,TSE
+2018,1,presidente,Alckmin,PSDB,4.76,0,TSE
+2018,1,presidente,João Amoêdo,NOVO,2.50,0,TSE
+2018,1,presidente,Henrique Meirelles,MDB,1.20,0,TSE
+2018,1,presidente,Marina,REDE,1.00,0,TSE
+2018,1,presidente,Alvaro Dias,PODE,0.80,0,TSE
+2018,1,presidente,Guilherme Boulos,PSOL,0.58,0,TSE
+2018,2,presidente,Bolsonaro,PSL,55.13,1,TSE
+2018,2,presidente,Fernando Haddad,PT,44.87,0,TSE
+2022,1,presidente,Lula,PT,48.43,0,TSE
+2022,1,presidente,Bolsonaro,PL,43.20,0,TSE
+2022,1,presidente,Simone Tebet,MDB,4.16,0,TSE
+2022,1,presidente,Ciro,PDT,3.04,0,TSE
+2022,1,presidente,Soraya Thronicke,UNIÃO,0.51,0,TSE
+2022,1,presidente,Luiz Felipe d'Avila,NOVO,0.47,0,TSE
+2022,1,presidente,Padre Kelmon,PTB,0.07,0,TSE
+2022,1,presidente,Leonardo Péricles,UP,0.05,0,TSE
+2022,1,presidente,Sofia Manzano,PCB,0.04,0,TSE
+2022,1,presidente,Vera Lúcia,PSTU,0.02,0,TSE
+2022,1,presidente,Eymael,DC,0.01,0,TSE
+2022,2,presidente,Lula,PT,50.90,1,TSE
+2022,2,presidente,Bolsonaro,PL,49.10,0,TSE
