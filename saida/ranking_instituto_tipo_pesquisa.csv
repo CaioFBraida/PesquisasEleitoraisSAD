@@ -1,0 +1,65 @@
+instituto,tipo,n_pesquisas,mae,vies_medio,cluster,confiabilidade
+IBPS,estimulada,18,2.103333333333333,-1.9999999999999991,0,Alta confiabilidade
+PoderData,estimulada,47,2.107021276595745,-1.2095744680851066,0,Alta confiabilidade
+Ideia Big Data,estimulada,42,2.107619047619048,-0.7147619047619049,0,Alta confiabilidade
+AtlasIntel/Internet,estimulada,145,2.184,-0.33062068965517266,0,Alta confiabilidade
+Badra Comunicação,estimulada,12,2.3433333333333337,-1.4733333333333336,0,Alta confiabilidade
+Quaest,estimulada,130,2.6512307692307693,-1.5090769230769234,0,Alta confiabilidade
+Brasmarket,estimulada,38,3.054210526315789,-2.0642105263157897,0,Alta confiabilidade
+Veritá,espontânea,12,3.0833333333333335,-3.0233333333333334,0,Alta confiabilidade
+FSB,estimulada,41,3.1085365853658535,-1.2207317073170734,0,Alta confiabilidade
+Futura,espontânea,28,3.173571428571429,-2.6428571428571432,0,Alta confiabilidade
+Percent Brasil,estimulada,8,3.2674999999999987,-1.6575000000000004,0,Alta confiabilidade
+Brasmarket,espontânea,15,3.3826666666666667,-2.7426666666666666,0,Alta confiabilidade
+Opinião Brasil,espontânea,18,3.5088888888888885,-2.127777777777777,0,Alta confiabilidade
+Souza Lopes,estimulada,9,3.5544444444444436,-1.776666666666667,0,Alta confiabilidade
+FSB,espontânea,18,3.5600000000000005,-2.813333333333334,0,Alta confiabilidade
+Ipec,estimulada,679,3.590957290132548,-1.0891605301914582,0,Alta confiabilidade
+Paraná Pesquisas,estimulada,170,3.6791764705882355,-1.8462352941176472,0,Alta confiabilidade
+MDA,estimulada,66,3.811212121212121,-2.8481818181818186,0,Alta confiabilidade
+Futura,estimulada,101,3.8786138613861385,-1.472673267326733,0,Alta confiabilidade
+Souza Lopes,espontânea,8,4.001250000000001,-2.8937500000000007,0,Alta confiabilidade
+Ipespe,estimulada,74,4.08445945945946,-1.655810810810811,0,Alta confiabilidade
+Certus,estimulada,8,4.135,-2.22,0,Alta confiabilidade
+Ideia Big Data,espontânea,20,4.157000000000001,-3.6410000000000005,0,Alta confiabilidade
+Datafolha,estimulada,1250,4.19624,-2.010992,0,Alta confiabilidade
+Ranking,estimulada,28,4.239285714285714,-3.4164285714285714,0,Alta confiabilidade
+Iveiga,espontânea,9,4.40888888888889,-2.4911111111111115,0,Alta confiabilidade
+Ipespe,espontânea,28,4.456071428571429,-4.036071428571429,0,Alta confiabilidade
+Iveiga,estimulada,11,4.50909090909091,-2.3018181818181827,0,Alta confiabilidade
+Sensus,estimulada,94,4.635744680851064,-2.976382978723404,0,Alta confiabilidade
+Gazeta Dados,estimulada,12,4.831666666666667,-4.134999999999999,0,Alta confiabilidade
+Data AZ,rejeição,18,4.855555555555556,-3.28,0,Alta confiabilidade
+Ranking,espontânea,12,4.994166666666667,-4.9175,0,Alta confiabilidade
+Veritá,estimulada,70,5.005,-1.3115714285714286,0,Alta confiabilidade
+Flex Consult,estimulada,10,5.0059999999999985,-2.5059999999999993,0,Alta confiabilidade
+Serpes,estimulada,60,5.114333333333333,-2.1086666666666667,0,Alta confiabilidade
+Seta,estimulada,17,5.122352941176469,-1.5011764705882353,0,Alta confiabilidade
+Instituto Methodus,estimulada,12,5.3500000000000005,-1.8633333333333335,0,Alta confiabilidade
+Perspectiva,estimulada,22,5.366363636363636,-2.317272727272727,0,Alta confiabilidade
+Paraná Pesquisas,espontânea,41,5.561463414634146,-5.304390243902439,1,Confiabilidade moderada
+Sensus,espontânea,34,5.588823529411765,-5.2,1,Confiabilidade moderada
+Item,estimulada,9,5.976666666666666,-3.5166666666666666,0,Alta confiabilidade
+Ibope,estimulada,1124,5.995142348754448,-2.5366192170818502,0,Alta confiabilidade
+Ipec,espontânea,66,6.086212121212121,-3.5271212121212123,0,Alta confiabilidade
+Seta,rejeição,18,6.321111111111112,-4.132222222222222,0,Alta confiabilidade
+Vox Populi,estimulada,182,6.4909340659340655,-3.7752197802197798,0,Alta confiabilidade
+Datafolha,espontânea,291,6.808762886597938,-6.089999999999999,1,Confiabilidade moderada
+Ibrape,estimulada,8,6.93625,-2.5837499999999993,0,Alta confiabilidade
+MDA,espontânea,15,6.950666666666667,-5.9719999999999995,1,Confiabilidade moderada
+GPP,estimulada,12,7.099999999999999,-4.991666666666667,1,Confiabilidade moderada
+Brand,rejeição,9,7.114444444444445,-3.6544444444444446,0,Alta confiabilidade
+Instituto Methodus,rejeição,9,7.2700000000000005,1.4122222222222223,0,Alta confiabilidade
+IDP,estimulada,8,7.407499999999999,-2.515,0,Alta confiabilidade
+Opinião Brasil,estimulada,20,7.812,-3.5420000000000003,0,Alta confiabilidade
+Ibope,espontânea,387,8.217002583979328,-6.20031007751938,1,Confiabilidade moderada
+Grupom,espontânea,10,9.136,-6.624,1,Confiabilidade moderada
+Vox Populi,rejeição,10,9.176,-1.826,2,Baixa confiabilidade
+Quaest,espontânea,23,9.591739130434783,-9.508260869565218,1,Confiabilidade moderada
+Data AZ,estimulada,9,9.743333333333332,-1.2877777777777775,2,Baixa confiabilidade
+Sensus,rejeição,20,10.597999999999999,0.7750000000000004,2,Baixa confiabilidade
+Ibope,rejeição,139,11.691942446043166,1.8105035971223025,2,Baixa confiabilidade
+IPMN,espontânea,11,12.365454545454543,-3.5890909090909093,2,Baixa confiabilidade
+Vox Populi,espontânea,10,13.257,-4.493,2,Baixa confiabilidade
+IPMN,estimulada,14,14.038571428571428,-3.152857142857143,2,Baixa confiabilidade
+Datafolha,rejeição,323,15.177925696594428,8.952476780185759,1,Confiabilidade moderada

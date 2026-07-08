@@ -37,6 +37,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
 
 warnings.filterwarnings("ignore")
 
@@ -263,32 +264,6 @@ def grafico_ranking_institutos(ranking: pd.DataFrame):
     plt.close(fig)
 
 
-def grafico_dispersao_vies_mae(ranking: pd.DataFrame):
-    fig, ax = plt.subplots(figsize=(8, 6))
-    for cluster_nome, grupo in ranking.groupby("confiabilidade"):
-        ax.scatter(
-            grupo["vies_medio"], grupo["mae"],
-            s=grupo["n_pesquisas"] * 2.5,
-            color=CORES_CLUSTER.get(cluster_nome, "#999999"),
-            label=cluster_nome, alpha=0.8, edgecolor="black", linewidth=0.5,
-        )
-        for _, row in grupo.iterrows():
-            ax.annotate(row["instituto"], (row["vies_medio"], row["mae"]),
-                        fontsize=8, xytext=(4, 4), textcoords="offset points")
-
-    ax.axvline(0, color="gray", linestyle="--", linewidth=1)
-    ax.set_xlabel("Vies medio (pontos percentuais)\n(negativo = subestima o candidato | positivo = superestima)")
-    ax.set_ylabel("Erro Absoluto Medio - MAE")
-    ax.set_title("Vies x Precisao por Instituto\n(tamanho da bolha = numero de pesquisas)")
-    ax.legend()
-    fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "02_dispersao_vies_mae.png")
-    fig.savefig(caminho)
-    print(f"[grafico salvo] {caminho}")
-    plt.show()
-    plt.close(fig)
-
-
 def grafico_boxplot_tipo(base: pd.DataFrame):
     tipos = [t for t in base["tipo"].dropna().unique()]
     dados = [base.loc[base["tipo"] == t, "erro_abs"].dropna().values for t in tipos]
@@ -301,7 +276,29 @@ def grafico_boxplot_tipo(base: pd.DataFrame):
     ax.set_ylabel("Erro Absoluto (pontos percentuais)")
     ax.set_title("Distribuicao do Erro por Tipo de Pesquisa")
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "03_boxplot_erro_por_tipo.png")
+    caminho = os.path.join(PASTA_SAIDA, "02_boxplot_erro_por_tipo.png")
+    fig.savefig(caminho)
+    print(f"[grafico salvo] {caminho}")
+    plt.show()
+    plt.close(fig)
+
+
+def grafico_erro_por_turno(base: pd.DataFrame):
+    """Compara o MAE entre 1º e 2º turno — sera que as pesquisas erram mais
+    no 1º turno (muitos candidatos) ou no 2º (cenario polarizado)?"""
+    agg = base.groupby("turno")["erro_abs"].mean()
+
+    fig, ax = plt.subplots(figsize=(5, 4.5))
+    rotulos = {1: "1º Turno", 2: "2º Turno"}
+    barras = [agg.get(t, 0) for t in [1, 2]]
+    cores = ["#457b9d", "#e63946"]
+    ax.bar([rotulos[t] for t in [1, 2]], barras, color=cores)
+    for i, v in enumerate(barras):
+        ax.text(i, v + 0.05, f"{v:.2f} pp", ha="center", fontweight="bold")
+    ax.set_ylabel("Erro Absoluto Medio (pontos percentuais)")
+    ax.set_title("Erro Medio das Pesquisas: 1º Turno vs 2º Turno")
+    fig.tight_layout()
+    caminho = os.path.join(PASTA_SAIDA, "05_erro_por_turno.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -318,7 +315,7 @@ def grafico_erro_ao_longo_do_tempo(base: pd.DataFrame):
     ax.set_title("Evolucao do Erro Medio das Pesquisas por Eleicao")
     ax.set_xticks(agg_ano["ano"])
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "04_erro_ao_longo_do_tempo.png")
+    caminho = os.path.join(PASTA_SAIDA, "03_erro_ao_longo_do_tempo.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -371,7 +368,7 @@ def grafico_cotovelo(X_scaled: np.ndarray):
     ax.set_title("Metodo do Cotovelo - Escolha de k")
     ax.legend()
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "05_metodo_cotovelo.png")
+    caminho = os.path.join(PASTA_SAIDA, "04_metodo_cotovelo.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -417,6 +414,27 @@ def imprimir_ranking_tipo(ranking_tipo: pd.DataFrame):
     print("=" * 78)
 
 
+def imprimir_taxa_acerto_vencedor(base: pd.DataFrame):
+    """Calcula quantas pesquisas da reta final 'acertaram' o candidato vencedor
+    (o candidato com maior percentual na pesquisa era realmente o eleito)."""
+    if "eleito" not in base.columns:
+        return
+    # para cada pesquisa (id unico), o candidato com maior percentual estimado
+    idx_max = base.groupby(["id_pesquisa", "ano", "turno"])["percentual"].idxmax()
+    tops = base.loc[idx_max]
+    acertos = tops["eleito"].sum()
+    total = len(tops)
+    taxa = 100 * acertos / total if total > 0 else 0
+
+    print("\n" + "=" * 78)
+    print("TAXA DE ACERTO DO VENCEDOR (reta final da campanha)")
+    print("=" * 78)
+    print(f"  Pesquisas analisadas: {total:,}".replace(",", "."))
+    print(f"  Acertaram o vencedor: {acertos:,}".replace(",", "."))
+    print(f"  Taxa de acerto:       {taxa:.1f}%")
+    print("=" * 78)
+
+
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
@@ -451,13 +469,19 @@ def main():
     ranking_tipo = clusterizar_instituto_tipo(agg_tipo)
     imprimir_ranking_tipo(ranking_tipo)
 
+    # ---- Metricas complementares --------------------------------------------
+    sil = silhouette_score(X_scaled, _km.labels_) if len(set(_km.labels_)) > 1 else 0
+    print(f"\nCoeficiente de Silhueta (k={N_CLUSTERS}): {sil:.3f}  (quanto mais proximo de 1, melhor a separacao dos clusters)")
+
+    imprimir_taxa_acerto_vencedor(base_reta_final)
+
     # ---- Graficos -----------------------------------------------------------
     print("\nGerando graficos (salvos em ./saida)...")
     grafico_erro_por_proximidade(base)          # usa TODAS as pesquisas (justificativa)
     grafico_ranking_institutos(ranking)
-    grafico_dispersao_vies_mae(ranking)
     grafico_boxplot_tipo(base_reta_final)
     grafico_erro_ao_longo_do_tempo(base)        # usa TODAS as pesquisas (visao historica)
+    grafico_erro_por_turno(base_reta_final)
     grafico_cotovelo(X_scaled)
 
     # ---- Exporta CSVs finais --------------------------------------------
