@@ -21,8 +21,8 @@ O que este script faz:
 Como rodar (mesma pasta que os dois arquivos csv):
     python analise_confiabilidade_institutos.py
 
-Arquivos esperados na mesma pasta:
-    - br_poder360_pesquisas_microdados__1__csv.gz  (ou o .csv descompactado)
+Arquivos esperados (dentro da pasta input/):
+    - resultado_pesquisas.csv  (ou br_poder360_pesquisas_microdados__1__csv.csv)
     - resultados_eleicoes_presidenciais_brasil.csv
 """
 
@@ -45,6 +45,10 @@ warnings.filterwarnings("ignore")
 # CONFIGURACOES GERAIS
 # ---------------------------------------------------------------------------
 PASTA = os.path.dirname(os.path.abspath(__file__))
+PASTA_INPUT = os.path.join(PASTA, "input")
+PASTA_OUTPUT = os.path.join(PASTA, "output")
+os.makedirs(PASTA_INPUT, exist_ok=True)
+os.makedirs(PASTA_OUTPUT, exist_ok=True)
 
 # Lista de nomes possiveis para o csv de pesquisas (aceita varios, na ordem abaixo).
 # Ajuste aqui se voce renomear o arquivo.
@@ -53,11 +57,8 @@ NOMES_POSSIVEIS_PESQUISAS = [
     "br_poder360_pesquisas_microdados__1__csv.csv",
     "br_poder360_pesquisas_microdados.csv",
 ]
-ARQ_PESQUISAS_GZ = os.path.join(PASTA, "br_poder360_pesquisas_microdados__1__csv.gz")
-ARQ_RESULTADOS = os.path.join(PASTA, "resultados_eleicoes_presidenciais_brasil.csv")
-
-PASTA_SAIDA = os.path.join(PASTA, "saida")
-os.makedirs(PASTA_SAIDA, exist_ok=True)
+ARQ_PESQUISAS_GZ = os.path.join(PASTA_INPUT, "br_poder360_pesquisas_microdados__1__csv.gz")
+ARQ_RESULTADOS = os.path.join(PASTA_INPUT, "resultados_eleicoes_presidenciais_brasil.csv")
 
 MIN_PESQUISAS_POR_INSTITUTO = 15   # minimo de pesquisas p/ entrar no ranking principal
 MIN_PESQUISAS_POR_GRUPO = 8        # minimo p/ entrar no ranking instituto x tipo
@@ -73,19 +74,17 @@ plt.rcParams["axes.grid"] = True
 plt.rcParams["grid.alpha"] = 0.3
 
 
-# ---------------------------------------------------------------------------
 # 1. CARGA DOS DADOS
-# ---------------------------------------------------------------------------
 def carregar_pesquisas():
     """Carrega o csv de microdados de pesquisas, tentando varios nomes possiveis
     e, por ultimo, o .gz original (descompactando-o se precisar)."""
     for nome in NOMES_POSSIVEIS_PESQUISAS:
-        caminho = os.path.join(PASTA, nome)
+        caminho = os.path.join(PASTA_INPUT, nome)
         if os.path.exists(caminho):
             return pd.read_csv(caminho, low_memory=False)
 
     if os.path.exists(ARQ_PESQUISAS_GZ):
-        caminho_extraido = os.path.join(PASTA, "_pesquisas_extraido.csv")
+        caminho_extraido = os.path.join(PASTA_INPUT, "_pesquisas_extraido.csv")
         with gzip.open(ARQ_PESQUISAS_GZ, "rb") as f_in:
             with open(caminho_extraido, "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
@@ -106,9 +105,7 @@ def carregar_resultados_reais():
     return pd.read_csv(ARQ_RESULTADOS)
 
 
-# ---------------------------------------------------------------------------
 # 2. PRE-PROCESSAMENTO / JOIN COM RESULTADO REAL
-# ---------------------------------------------------------------------------
 def preparar_base(pesquisas: pd.DataFrame, resultados: pd.DataFrame) -> pd.DataFrame:
     # Escopo do trabalho: eleicoes presidenciais (pergunta-problema)
     df = pesquisas[pesquisas["cargo"] == "presidente"].copy()
@@ -149,9 +146,7 @@ def preparar_base(pesquisas: pd.DataFrame, resultados: pd.DataFrame) -> pd.DataF
     return base
 
 
-# ---------------------------------------------------------------------------
 # 3. AGREGACAO POR INSTITUTO + CLUSTERIZACAO (RANKING PRINCIPAL)
-# ---------------------------------------------------------------------------
 def agregar_por_instituto(base: pd.DataFrame) -> pd.DataFrame:
     agg = base.groupby("instituto").agg(
         n_pesquisas=("erro", "size"),
@@ -193,9 +188,7 @@ def clusterizar_institutos(agg: pd.DataFrame) -> pd.DataFrame:
     return elegiveis, X_scaled, km
 
 
-# ---------------------------------------------------------------------------
 # 4. AGREGACAO POR INSTITUTO x TIPO DE PESQUISA + CLUSTERIZACAO
-# ---------------------------------------------------------------------------
 def agregar_por_instituto_tipo(base: pd.DataFrame) -> pd.DataFrame:
     base_tipo = base.dropna(subset=["tipo"]).copy()
     agg = base_tipo.groupby(["instituto", "tipo"]).agg(
@@ -232,9 +225,7 @@ def clusterizar_instituto_tipo(agg: pd.DataFrame) -> pd.DataFrame:
     return elegiveis
 
 
-# ---------------------------------------------------------------------------
 # 5. GRAFICOS
-# ---------------------------------------------------------------------------
 CORES_CLUSTER = {
     "Alta confiabilidade": "#2a9d8f",
     "Confiabilidade moderada": "#e9c46a",
@@ -250,14 +241,13 @@ def grafico_ranking_institutos(ranking: pd.DataFrame):
     ax.barh(ranking_plot["instituto"], ranking_plot["mae"], color=cores)
     ax.invert_yaxis()
     ax.set_xlabel("Erro Absoluto Medio - MAE (pontos percentuais)")
-    ax.set_title("Ranking de Confiabilidade dos Institutos de Pesquisa\n"
-                 "(eleicoes presidenciais - quanto menor o MAE, mais preciso)")
+    ax.set_title("Ranking de Confiabilidade dos Institutos de Pesquisa")
 
     handles = [plt.Rectangle((0, 0), 1, 1, color=cor) for cor in CORES_CLUSTER.values()]
     ax.legend(handles, CORES_CLUSTER.keys(), loc="lower right")
 
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "01_ranking_institutos_mae.png")
+    caminho = os.path.join(PASTA_OUTPUT, "01_ranking_institutos_mae.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -276,7 +266,7 @@ def grafico_boxplot_tipo(base: pd.DataFrame):
     ax.set_ylabel("Erro Absoluto (pontos percentuais)")
     ax.set_title("Distribuicao do Erro por Tipo de Pesquisa")
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "02_boxplot_erro_por_tipo.png")
+    caminho = os.path.join(PASTA_OUTPUT, "02_boxplot_erro_por_tipo.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -298,7 +288,7 @@ def grafico_erro_por_turno(base: pd.DataFrame):
     ax.set_ylabel("Erro Absoluto Medio (pontos percentuais)")
     ax.set_title("Erro Medio das Pesquisas: 1º Turno vs 2º Turno")
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "05_erro_por_turno.png")
+    caminho = os.path.join(PASTA_OUTPUT, "05_erro_por_turno.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -315,7 +305,7 @@ def grafico_erro_ao_longo_do_tempo(base: pd.DataFrame):
     ax.set_title("Evolucao do Erro Medio das Pesquisas por Eleicao")
     ax.set_xticks(agg_ano["ano"])
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "03_erro_ao_longo_do_tempo.png")
+    caminho = os.path.join(PASTA_OUTPUT, "03_erro_ao_longo_do_tempo.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -339,10 +329,9 @@ def grafico_erro_por_proximidade(base: pd.DataFrame):
     ax.axvline(2.5, color="gray", linestyle="--", linewidth=1)
     ax.set_xlabel("Dias antes da eleicao em que a pesquisa foi divulgada")
     ax.set_ylabel("Erro Absoluto Medio (pontos percentuais)")
-    ax.set_title("Erro das Pesquisas conforme a Distancia da Eleicao\n"
-                 f"(ranking principal usa apenas ate {DIAS_MAX_ANTES_ELEICAO} dias - area verde)")
+    ax.set_title("Erro das Pesquisas conforme a Distancia da Eleicao")
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "00_erro_por_proximidade_eleicao.png")
+    caminho = os.path.join(PASTA_OUTPUT, "00_erro_por_proximidade_eleicao.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
@@ -364,20 +353,18 @@ def grafico_cotovelo(X_scaled: np.ndarray):
     ax.axvline(N_CLUSTERS, color="red", linestyle="--", alpha=0.6,
                label=f"k escolhido = {N_CLUSTERS}")
     ax.set_xlabel("Numero de clusters (k)")
-    ax.set_ylabel("Inercia (WCSS)")
-    ax.set_title("Metodo do Cotovelo - Escolha de k")
+    ax.set_ylabel("Inercia")
+    ax.set_title("Método do Cotovelo")
     ax.legend()
     fig.tight_layout()
-    caminho = os.path.join(PASTA_SAIDA, "04_metodo_cotovelo.png")
+    caminho = os.path.join(PASTA_OUTPUT, "04_metodo_cotovelo.png")
     fig.savefig(caminho)
     print(f"[grafico salvo] {caminho}")
     plt.show()
     plt.close(fig)
 
 
-# ---------------------------------------------------------------------------
 # 6. IMPRESSAO NO TERMINAL
-# ---------------------------------------------------------------------------
 def imprimir_ranking(ranking: pd.DataFrame):
     print("\n" + "=" * 78)
     print("RANKING DE CONFIABILIDADE DOS INSTITUTOS DE PESQUISA ELEITORAL")
@@ -476,7 +463,7 @@ def main():
     imprimir_taxa_acerto_vencedor(base_reta_final)
 
     # ---- Graficos -----------------------------------------------------------
-    print("\nGerando graficos (salvos em ./saida)...")
+    print("\nGerando graficos (salvos em ./output)...")
     grafico_erro_por_proximidade(base)          # usa TODAS as pesquisas (justificativa)
     grafico_ranking_institutos(ranking)
     grafico_boxplot_tipo(base_reta_final)
@@ -485,19 +472,19 @@ def main():
     grafico_cotovelo(X_scaled)
 
     # ---- Exporta CSVs finais --------------------------------------------
-    caminho_ranking = os.path.join(PASTA_SAIDA, "ranking_confiabilidade_institutos.csv")
+    caminho_ranking = os.path.join(PASTA_OUTPUT, "ranking_confiabilidade_institutos.csv")
     ranking.to_csv(caminho_ranking, index=False)
     print(f"\n[csv salvo] {caminho_ranking}")
 
-    caminho_ranking_tipo = os.path.join(PASTA_SAIDA, "ranking_instituto_tipo_pesquisa.csv")
+    caminho_ranking_tipo = os.path.join(PASTA_OUTPUT, "ranking_instituto_tipo_pesquisa.csv")
     ranking_tipo.to_csv(caminho_ranking_tipo, index=False)
     print(f"[csv salvo] {caminho_ranking_tipo}")
 
-    caminho_base = os.path.join(PASTA_SAIDA, "base_pesquisas_vs_resultado_real_completa.csv")
+    caminho_base = os.path.join(PASTA_OUTPUT, "base_pesquisas_vs_resultado_real_completa.csv")
     base.to_csv(caminho_base, index=False)
     print(f"[csv salvo] {caminho_base}")
 
-    caminho_base_reta = os.path.join(PASTA_SAIDA, "base_pesquisas_vs_resultado_real_reta_final.csv")
+    caminho_base_reta = os.path.join(PASTA_OUTPUT, "base_pesquisas_vs_resultado_real_reta_final.csv")
     base_reta_final.to_csv(caminho_base_reta, index=False)
     print(f"[csv salvo] {caminho_base_reta}")
 
